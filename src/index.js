@@ -66,6 +66,11 @@ const instruments = [
 const search = document.querySelector('.js-search');
 const list = document.querySelector('.js-list');
 
+const favoriteArr = [];
+const basketArr = [];
+const KEY_FAVORITE = 'favorite';
+const KEY_BASKET = 'basket';
+
 function createMarkup(arr) {
   const markup = arr
     .map(
@@ -74,8 +79,8 @@ function createMarkup(arr) {
         <h2>${name}</h2>
         <p ><a class="js-info" href="#">More information</a></p>
         <div>
-          <button>Add to favorite</button>
-          <button>Add to basket</button>
+          <button class="js-favorite">Add to favorite</button>
+          <button class="js-basket">Add to basket</button>
         </div>
       </li>`
     )
@@ -90,8 +95,7 @@ function onClickInfo(evt) {
   evt.preventDefault();
 
   if (evt.target.classList.contains('js-info')) {
-    const { id } = evt.target.closest('.js-card').dataset;
-    const product = findProduct(Number(id));
+    const product = findProduct(evt.target);
     const instance = basicLightbox.create(`
 	 <div class="modal">
         <img class="modal-img" src="${product.img}" alt="${product.name}" width="300" />
@@ -99,17 +103,31 @@ function onClickInfo(evt) {
         <h3>${product.price} грн</h3>
         <p>${product.description}</p>
           <div>
-          <button>Add to favorite</button>
-          <button>Add to basket</button>
+          <button class="js-favorite">Add to favorite</button>
+          <button class="js-basket">Add to basket</button>
         </div>
       </div>
 `);
     instance.show();
   }
+
+  if (evt.target.classList.contains('js-basket')) {
+    const product = findProduct(evt.target);
+    console.log(product);
+    basketArr.push(product);
+    localStorage.setItem(KEY_BASKET, JSON.stringify(basketArr));
+  }
+
+  if (evt.target.classList.contains('js-favorite')) {
+    const product = findProduct(evt.target);
+    favoriteArr.push(product);
+    localStorage.setItem(KEY_FAVORITE, JSON.stringify(favoriteArr));
+  }
 }
 
 createMarkup(instruments);
 
-function findProduct(productId) {
+function findProduct(elem) {
+  const productId = Number(elem.closest('.js-card').dataset.id);
   return instruments.find(({ id }) => id === productId);
 }
