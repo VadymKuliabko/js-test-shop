@@ -1,0 +1,32 @@
+a {
+  text-decoration: none;
+  color: black;
+  font-size: 20px;
+}
+
+a:hover {
+  color: blue;
+}
+
+ul {
+  list-style: none;
+}
+
+.nav-list {
+  display: flex;
+}
+
+.nav-link {
+  display: block;
+  padding: 10px;
+}
+
+.modal {
+  width: 600px;
+  background-color: white;
+}
+
+.modal-img {
+  display: block;
+  margin: auto;
+}

@@ -1,3 +1,6 @@
+import * as basicLightbox from 'basiclightbox';
+import 'basiclightbox/dist/basicLightbox.min.css';
+
 const instruments = [
   {
     id: 1,
@@ -59,4 +62,54 @@ const instruments = [
       'Будівельний рівень DNIPRO-M ProVision 600 мм має безліч переваг. Серед них чудова ергономіка, високий рівень захисту від ударів, велика точність вимірювань і багато іншого.',
   },
 ];
-console.log(instruments);
+
+const search = document.querySelector('.js-search');
+const list = document.querySelector('.js-list');
+
+function createMarkup(arr) {
+  const markup = arr
+    .map(
+      ({ id, img, name }) => `<li data-id="${id}" class="js-card">
+        <img src="${img}" alt="${name}" width="300">
+        <h2>${name}</h2>
+        <p ><a class="js-info" href="#">More information</a></p>
+        <div>
+          <button>Add to favorite</button>
+          <button>Add to basket</button>
+        </div>
+      </li>`
+    )
+    .join('');
+
+  list.innerHTML = markup;
+}
+
+list.addEventListener('click', onClickInfo);
+
+function onClickInfo(evt) {
+  evt.preventDefault();
+
+  if (evt.target.classList.contains('js-info')) {
+    const { id } = evt.target.closest('.js-card').dataset;
+    const product = findProduct(Number(id));
+    const instance = basicLightbox.create(`
+	 <div class="modal">
+        <img class="modal-img" src="${product.img}" alt="${product.name}" width="300" />
+        <h2>${product.name}</h2>
+        <h3>${product.price} грн</h3>
+        <p>${product.description}</p>
+          <div>
+          <button>Add to favorite</button>
+          <button>Add to basket</button>
+        </div>
+      </div>
+`);
+    instance.show();
+  }
+}
+
+createMarkup(instruments);
+
+function findProduct(productId) {
+  return instruments.find(({ id }) => id === productId);
+}
