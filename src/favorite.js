@@ -1,10 +1,13 @@
+import { common } from './common';
 import { createMarkup } from './helpers/createMarkup';
-import { createModal } from './helpers/createModal';
-
+import { findProduct } from './helpers/findProduct';
 import { instruments } from './data/data';
 import { onClickInfo } from './helpers/onClickInfo';
 
 const list = document.querySelector('.js-list');
+const favorite = JSON.parse(localStorage.getItem(common.KEY_FAVORITE)) || [];
 
-createMarkup(instruments, list);
+createMarkup(favorite, list);
 list.addEventListener('click', onClickInfo);
+
+findProduct(evt.target, instruments);
